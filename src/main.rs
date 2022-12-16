@@ -1,48 +1,53 @@
-//use ferris_says::say; // from the previous step
-use std::io::stdin;//{stdin,stdout, BufWriter};
-use rand::{thread_rng,Rng};
+// Useful tool commands
+// cargo fix
+// cargo fmt
+// cargo clippy
+
+//use ferris_says::say;
+use rand::{thread_rng, Rng};
 use std::cmp::Ordering;
+use std::io::stdin; //{stdin,stdout, BufWriter};
 
 fn main() {
-/*
-    let stdout = stdout();
+    let init_message = String::from("=====Guess the number!=====");
+    /*     let width = init_message.len();
+    let mut writer = BufWriter::new(stdout());
+    say(init_message, width, &mut writer).unwrap();*/
+    println!("{}", init_message);
 
-    let init_message = String::from("   Guess the number!\nPlease input your guess.");
-    let width = init_message.chars().count();
-    let mut writer = BufWriter::new(stdout.lock());
-    say(init_message.as_bytes(), width, &mut writer).unwrap();
-*/
-    println!("\n   Guess the number!\nPlease input your guess");
+    let secret_number = thread_rng().gen_range(1..=100);
+    //println!("The secret number is: {secret_number}\n");
 
-    let secret_number = thread_rng()
-        .gen_range(1..=100);
-    println!("The secret number is: {secret_number}");
+    loop {
+        println!("\nPlease input your guess");
+        let mut guess = String::new();
 
-    let mut guess = String::new();
+        stdin().read_line(&mut guess).expect("Failed to read guess");
 
-    stdin()
-        .read_line(&mut guess)
-        .expect("Failed to read guess");
+        let guess: u32 = match guess.trim().parse() {
+            Ok(num) => num,
+            Err(_) => continue,
+        };
 
-    let guess: u32 = guess.trim().parse().expect("Please type a number!");
+        /*
+            let message = String::from("You guessed: {guess}");
+            let width = message.chars().count();
+            let mut writer = BufWriter::new(stdout.lock());
+            say(message.as_bytes(), width, &mut writer).unwrap();
+        */
 
-/*
-    let message = String::from("You guessed: {guess}");
-    let width = message.chars().count();
-    let mut writer = BufWriter::new(stdout.lock());
-    say(message.as_bytes(), width, &mut writer).unwrap();
-*/
+        println!("\nYou guessed: {guess}");
 
-    println!("\nYou guessed: {guess}");
-
-    match guess.cmp(&secret_number) {
-        Ordering::Less => println!("Too small!"),
-        Ordering::Greater => println!("Too big!"),
-        Ordering::Equal => println!("You win!"),
-    }
-
-    for _i in 0..2 {
-        // underscore to signify unused variable
-        
+        match guess.cmp(&secret_number) {
+            Ordering::Less => println!("Too small!"),
+            Ordering::Greater => println!("Too big!"),
+            Ordering::Equal => {
+                println!("You win!");
+                break;
+            }
+        }
+        for _i in 0..2 {
+            // underscore to signify unused variable
+        }
     }
 }
